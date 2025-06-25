@@ -1,0 +1,26 @@
+name: "Vectorize Repository"
+description: "Vectorize Github repository"
+
+inputs:
+  exclude:
+    description: "a comma-separated list of globs to ignore"
+    required: false
+    default: ".git"
+  include:
+    description: "a comma-separated list of globs to include"
+    required: false
+    default: "**/*"
+
+runs:
+  using: "composite"
+  steps:
+    - run: bun install
+      shell: bash
+      working-directory: ${{ github.action_path }}
+    - run: bun src/index.ts ${{ inputs.exclude }} ${{ inputs.include }}
+      shell: bash
+      working-directory: ${{ github.action_path }}
+
+branding:
+  icon: "box"
+  color: "blue"
