@@ -1,11 +1,14 @@
 import fs from 'fs'
 import { pipeline } from '@xenova/transformers'
 import glob from 'fast-glob'
-
-import { DATA_PATH, EXCLUDES, INCLUDES, MODEL, WORKSPACE } from './config'
+import { DATA_PATH, EXCLUDES, INCLUDES, MODEL, TABLE_NAME, WORKSPACE } from './config'
 import type { Data } from './types'
+import { db, migrate } from './sql'
 
 console.log({ WORKSPACE, INCLUDES, EXCLUDES, DATA_PATH, ARGS: process.argv })
+//
+migrate(TABLE_NAME)
+//
 const entries = await glob(INCLUDES, {
 	dot: true,
 	onlyFiles: true,
@@ -37,3 +40,5 @@ for (const entry of entries) {
 		console.log(`error reading: ${entry}: ${error}`)
 	}
 }
+
+db.close(false)
