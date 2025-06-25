@@ -8,3 +8,5 @@ export const EXCLUDES = process.argv[2]?.split(',') ?? []
 export const INCLUDES = (process.argv[3]?.split(',') ?? ['**/*']).map((entry) => path.join(WORKSPACE, entry))
 // write path
 export const DATA_PATH = fs.mkdirSync(path.join(WORKSPACE, '.vector_data'), { recursive: true })
+
+export const MODEL = 'Xenova/all-MiniLM-L6-v2'
