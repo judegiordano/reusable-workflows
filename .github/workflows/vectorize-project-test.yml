@@ -19,7 +19,7 @@ jobs:
 
       - name: use action
         id: vectorize
-        uses: ./vectorize_codebase
+        uses: ./vectorize-codebase
         with:
           include: "**/*.md,**/*.yml"
 
