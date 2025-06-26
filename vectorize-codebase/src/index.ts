@@ -1,11 +1,11 @@
 import fs from 'fs'
 import { pipeline } from '@xenova/transformers'
 import glob from 'fast-glob'
-import { DATA_PATH, EXCLUDES, INCLUDES, MODEL, SHA, WORKSPACE } from './config'
+import { DB_PATH, EXCLUDES, INCLUDES, MODEL, SHA, WORKSPACE } from './config'
 import type { Data } from './types'
 import { bulkInsert, db, migrate } from './sql'
 
-console.log({ SHA, WORKSPACE, INCLUDES, EXCLUDES, DATA_PATH, ARGS: process.argv })
+console.log({ SHA, WORKSPACE, INCLUDES, EXCLUDES, DB_PATH, ARGS: process.argv })
 //
 migrate()
 //
