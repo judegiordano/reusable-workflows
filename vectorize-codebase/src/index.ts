@@ -1,19 +1,20 @@
 import fs from 'fs'
 import { pipeline } from '@xenova/transformers'
 import glob from 'fast-glob'
-import { DB_PATH, EXCLUDES, INCLUDES, MODEL, SHA, WORKSPACE } from './config'
+import { DB_PATH, MODEL, SHA, WORKSPACE } from './config'
 import type { Data } from './types'
 import { bulkInsert, db, migrate } from './sql'
+import { EXCLUDE, INCLUDE } from './args'
 
-console.log({ SHA, WORKSPACE, INCLUDES, EXCLUDES, DB_PATH, ARGS: process.argv })
+console.log({ SHA, WORKSPACE, INCLUDE, EXCLUDE, DB_PATH })
 //
 migrate()
 //
-const entries = await glob(INCLUDES, {
+const entries = await glob(INCLUDE, {
 	dot: true,
 	onlyFiles: true,
 	followSymbolicLinks: false,
-	ignore: EXCLUDES
+	ignore: EXCLUDE
 })
 
 console.log(`${entries.length} matched files`)
