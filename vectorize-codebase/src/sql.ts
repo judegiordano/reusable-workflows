@@ -21,17 +21,17 @@ export function migrate() {
 }
 
 export function bulkInsert(embeddings: Data[]) {
-	const query = db.prepare(`INSERT INTO ${TABLE_NAME} (sha, path, content, vector) VALUES ($sha, $path, $content, $vector)`)
+	const query = db.prepare(`INSERT INTO ${TABLE_NAME} (sha, path, content, vector) VALUES (:sha, :path, :content, :vector)`)
 	console.log({ query })
 	const insertMany = db.transaction((values) => {
 		for (const value of values) query.run(value)
 		return values.length
 	})
 	const values = embeddings.map(({ path, content, vector }) => ({
-		$sha: SHA,
-		$path: path,
-		$content: content,
-		$vector: JSON.stringify(vector),
+		sha: SHA,
+		path: path,
+		content: content,
+		vector: JSON.stringify(vector),
 	}))
 	console.log({ values })
 	const inserted = insertMany(values)
