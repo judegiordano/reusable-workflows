@@ -44,6 +44,7 @@ export function bulkInsert(embeddings: Data[]) {
 		$vector: vector,
 		$content: content
 	}))
+	console.log({ values })
 	const inserted = insertMany(values)
 	console.log({ inserted })
 }

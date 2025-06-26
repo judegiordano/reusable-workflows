@@ -1,11 +1,11 @@
 import fs from 'fs'
 import { pipeline } from '@xenova/transformers'
 import glob from 'fast-glob'
-import { DATA_PATH, EXCLUDES, INCLUDES, MODEL, WORKSPACE } from './config'
+import { DATA_PATH, EXCLUDES, INCLUDES, MODEL, SHA, WORKSPACE } from './config'
 import type { Data } from './types'
 import { bulkInsert, db, migrate } from './sql'
 
-console.log({ WORKSPACE, INCLUDES, EXCLUDES, DATA_PATH, ARGS: process.argv })
+console.log({ SHA, WORKSPACE, INCLUDES, EXCLUDES, DATA_PATH, ARGS: process.argv })
 //
 migrate()
 //
@@ -33,12 +33,11 @@ for (const entry of entries) {
 		embeddings.push({ path: entry, content, vector })
 		if (embeddings.length === 100 || iter >= entries.length) {
 			bulkInsert(embeddings)
-			// fs.writeFileSync(`${DATA_PATH}/${Date.now()}.json`, JSON.stringify(embeddings))
 			// clear
 			embeddings.length = 0
 		}
 	} catch (error) {
-		console.log(`error reading: ${entry}: ${error}`)
+		console.log(`error processing: ${entry}: ${error}`)
 	}
 }
 
