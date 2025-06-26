@@ -20,23 +20,22 @@ export function migrate() {
 	db.run(sql)
 }
 
-const bulkInsertTransaction = db.prepare(`
-	INSERT INTO ${TABLE_NAME} (
-		sha,
-		path,
-		vector,
-		content
-	) VALUES (
-		$sha,
-		$path,
-		$vector,
-		$content
-	)
-`)
-
 export function bulkInsert(embeddings: Data[]) {
+	const query = db.prepare(`
+		INSERT INTO ${TABLE_NAME} (
+			sha,
+			path,
+			vector,
+			content
+		) VALUES (
+			$sha,
+			$path,
+			$vector,
+			$content
+		)
+	`)
 	const insertMany = db.transaction((cats) => {
-		for (const cat of cats) bulkInsertTransaction.run(cat)
+		for (const cat of cats) query.run(cat)
 		return cats.length
 	})
 	const values = embeddings.map(({ path, content, vector }) => ({
