@@ -1,9 +1,11 @@
-import { Database } from 'bun:sqlite'
+import { Database, type Statement } from 'bun:sqlite'
 import { DB_PATH, SHA, TABLE_NAME } from './config'
 import type { Data } from './types'
 import { log } from './logger'
 
 export const db = new Database(DB_PATH, { create: true, readwrite: true, strict: true })
+
+let insertMany: Statement
 
 export function migrate() {
 	const sql = `
@@ -19,10 +21,7 @@ export function migrate() {
 	);
 	`
 	db.run(sql)
-}
-
-export function bulkInsert(embeddings: Data[]) {
-	const query = db.prepare(`INSERT INTO ${TABLE_NAME} (
+	insertMany = db.prepare(`INSERT INTO ${TABLE_NAME} (
 		sha,
 		file,
 		path,
@@ -35,8 +34,11 @@ export function bulkInsert(embeddings: Data[]) {
 		:content,
 		:vector
 	)`)
+}
+
+export function bulkInsert(embeddings: Data[]) {
 	const insert = db.transaction((values) => {
-		for (const value of values) query.run(value)
+		for (const value of values) insertMany.run(value)
 		return values.length
 	})
 	const values = embeddings.map(({ file, path, content, vector }) => ({
