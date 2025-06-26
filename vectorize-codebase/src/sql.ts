@@ -21,19 +21,7 @@ export function migrate() {
 }
 
 export function bulkInsert(embeddings: Data[]) {
-	const query = db.prepare(`
-		INSERT INTO ${TABLE_NAME} (
-			sha,
-			path,
-			vector,
-			content
-		) VALUES (
-			$sha,
-			$path,
-			$vector,
-			$content
-		)
-	`)
+	const query = db.prepare(`INSERT INTO ${TABLE_NAME} (sha, path, vector, content) VALUES ($sha, $path, $vector, $content)`)
 	const insertMany = db.transaction((values) => {
 		for (const value of values) query.run(value)
 		return values.length
