@@ -16,8 +16,9 @@ const entries = await glob(INCLUDE, {
 	followSymbolicLinks: false,
 	ignore: EXCLUDE
 })
+const total = entries.length
 
-console.log(`${entries.length} matched files`)
+console.log(`${total} matched files`)
 const embedder = await pipeline('feature-extraction', MODEL)
 
 const embeddings: Data[] = []
@@ -25,13 +26,16 @@ let iter = 0
 for (const entry of entries) {
 	iter++
 	try {
-		const data = parseContent(entry)
-		if (!data) continue
-		const { file, path, content } = data
+		const { content, file, path } = parseContent(entry)
+		console.log(`[${iter}/${total}] processing: ${file}`)
+		if (!content.length) {
+			console.warn(`skipping empty content: ${file}`)
+			continue
+		}
 		const embed = await embedder(content, { pooling: 'mean' })
 		const vector: number[] = Array.from(embed.data)
 		embeddings.push({ path, file, content, vector })
-		if (embeddings.length === 100 || iter >= entries.length) {
+		if (embeddings.length === 100 || iter >= total) {
 			bulkInsert(embeddings)
 			// clear
 			embeddings.length = 0
