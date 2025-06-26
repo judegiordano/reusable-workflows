@@ -21,8 +21,8 @@ jobs:
         id: vectorize
         uses: ./vectorize-codebase
         with:
-          include: "**/*.md,**/*.yml"
-          exclude: "**/*node_modules/**/*"
+          include-pattern: "**/*.md,**/*.yml"
+          exclude-pattern: "**/*node_modules/**/*"
 
       - name: upload data artifact
         uses: actions/upload-artifact@v4

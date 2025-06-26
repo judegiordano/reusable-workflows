@@ -5,11 +5,11 @@ import { WORKSPACE } from './config'
 const { values, positionals } = parseArgs({
 	args: Bun.argv,
 	options: {
-		include: {
+		'include-pattern': {
 			type: 'string',
 			default: '**/*'
 		},
-		exclude: {
+		'exclude-pattern': {
 			type: 'string',
 			default: '.git'
 		},
@@ -20,6 +20,6 @@ const { values, positionals } = parseArgs({
 
 console.log({ values, positionals })
 
-export const EXCLUDE = values.exclude.split(',')
+export const EXCLUDE = values['exclude-pattern'].split(',')
 // prepend workspace to only include this project's directory
-export const INCLUDE = values.include.split(',').map((e) => path.join(WORKSPACE, e))
+export const INCLUDE = values['include-pattern'].split(',').map((e) => path.join(WORKSPACE, e))
