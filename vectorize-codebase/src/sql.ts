@@ -5,7 +5,6 @@ import type { Data } from './types'
 export const db = new Database(DB_PATH, { create: true, readwrite: true, strict: true })
 
 export function migrate() {
-	// db.exec('PRAGMA journal_mode = WAL;')
 	const sql = `
 		CREATE TABLE IF NOT EXISTS "${TABLE_NAME}"(
 		"id" INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -44,6 +43,4 @@ export function bulkInsert(embeddings: Data[]) {
 	}))
 	const inserted = insert(values)
 	console.log({ inserted })
-	const data = db.query(`SELECT * FROM ${TABLE_NAME}`).get()
-	console.log({ data })
 }
