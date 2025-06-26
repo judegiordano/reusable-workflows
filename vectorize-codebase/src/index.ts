@@ -40,5 +40,3 @@ for (const entry of entries) {
 		console.log(`error processing: ${entry}: ${error}`)
 	}
 }
-
-db.close(false)
