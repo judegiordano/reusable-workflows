@@ -32,8 +32,8 @@ export function bulkInsert(embeddings: Data[]) {
 		:content,
 		:vector
 	)`)
-	const insertMany = db.transaction((values) => {
-		for (const value of values) query.run(value)
+	const insert = db.transaction((values) => {
+		for (const value of values) query.all(value)
 		return values.length
 	})
 	const values = embeddings.map(({ path, content, vector }) => ({
@@ -42,6 +42,6 @@ export function bulkInsert(embeddings: Data[]) {
 		content: content,
 		vector: JSON.stringify(vector),
 	}))
-	const inserted = insertMany(values)
+	const inserted = insert(values)
 	console.log({ inserted })
 }
