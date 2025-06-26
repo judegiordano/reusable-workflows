@@ -34,9 +34,9 @@ export function bulkInsert(embeddings: Data[]) {
 			$content
 		)
 	`)
-	const insertMany = db.transaction((cats) => {
-		for (const cat of cats) query.run(cat)
-		return cats.length
+	const insertMany = db.transaction((values) => {
+		for (const value of values) query.run({ ...value })
+		return values.length
 	})
 	const values = embeddings.map(({ path, content, vector }) => ({
 		$sha: SHA,
