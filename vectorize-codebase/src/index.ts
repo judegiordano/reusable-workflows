@@ -1,10 +1,10 @@
-import fs from 'fs'
 import { pipeline } from '@xenova/transformers'
 import glob from 'fast-glob'
 import { DB_PATH, MODEL, SHA, WORKSPACE } from './config'
 import type { Data } from './types'
 import { bulkInsert, db, migrate } from './sql'
 import { EXCLUDE, INCLUDE } from './args'
+import { parseContent } from './file'
 
 console.log({ SHA, WORKSPACE, INCLUDE, EXCLUDE, DB_PATH })
 //
@@ -24,17 +24,13 @@ const embeddings: Data[] = []
 let iter = 0
 for (const entry of entries) {
 	iter++
-	console.log(`embedding: ${entry}`)
 	try {
-		const buffer = fs.readFileSync(entry)
-		const content = buffer.toString('utf-8')
-		if (!content.length) {
-			console.warn(`skipping empty content: ${entry}`)
-			continue
-		}
+		const data = parseContent(entry)
+		if (!data) continue
+		const { file, path, content } = data
 		const embed = await embedder(content, { pooling: 'mean' })
 		const vector: number[] = Array.from(embed.data)
-		embeddings.push({ path: entry, content, vector })
+		embeddings.push({ path, file, content, vector })
 		if (embeddings.length === 100 || iter >= entries.length) {
 			bulkInsert(embeddings)
 			// clear

@@ -9,6 +9,7 @@ export function migrate() {
 		CREATE TABLE IF NOT EXISTS "${TABLE_NAME}"(
 		"id" INTEGER PRIMARY KEY AUTOINCREMENT,
 		"sha" TEXT NOT NULL,
+		"file" TEXT NOT NULL,
 		"path" TEXT NOT NULL,
 		"content" TEXT NOT NULL,
 		"vector" JSONB NOT NULL,
@@ -22,11 +23,13 @@ export function migrate() {
 export function bulkInsert(embeddings: Data[]) {
 	const query = db.prepare(`INSERT INTO ${TABLE_NAME} (
 		sha,
+		file,
 		path,
 		content,
 		vector
 	) VALUES (
 		:sha,
+		:file,
 		:path,
 		:content,
 		:vector
@@ -35,10 +38,11 @@ export function bulkInsert(embeddings: Data[]) {
 		for (const value of values) query.run(value)
 		return values.length
 	})
-	const values = embeddings.map(({ path, content, vector }) => ({
+	const values = embeddings.map(({ file, path, content, vector }) => ({
 		sha: SHA,
-		path: path,
-		content: content,
+		file,
+		path,
+		content,
 		vector: JSON.stringify(vector),
 	}))
 	const inserted = insert(values)
