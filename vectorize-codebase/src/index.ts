@@ -3,7 +3,7 @@ import { pipeline } from '@xenova/transformers'
 import glob from 'fast-glob'
 import { DATA_PATH, EXCLUDES, INCLUDES, MODEL, SHA, WORKSPACE } from './config'
 import type { Data } from './types'
-import { bulkInsert, db, migrate } from './sql'
+import { bulkInsert, migrate } from './sql'
 
 console.log({ SHA, WORKSPACE, INCLUDES, EXCLUDES, DATA_PATH, ARGS: process.argv })
 //
@@ -27,7 +27,10 @@ for (const entry of entries) {
 	try {
 		const buffer = fs.readFileSync(entry)
 		const content = buffer.toString('utf-8')
-		if (!content.length) continue
+		if (!content.length) {
+			console.log(`skipping empty content: ${entry}`)
+			continue
+		}
 		const embed = await embedder(content, { pooling: 'mean' })
 		const vector: number[] = Array.from(embed.data)
 		embeddings.push({ path: entry, content, vector })
