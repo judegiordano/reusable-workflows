@@ -2,7 +2,7 @@ import path from 'path'
 import { parseArgs } from 'util'
 import { WORKSPACE } from './config'
 
-const { values } = parseArgs({
+const { values, positionals } = parseArgs({
 	args: Bun.argv,
 	options: {
 		include: {
@@ -17,6 +17,8 @@ const { values } = parseArgs({
 	strict: true,
 	allowPositionals: true,
 })
+
+console.log({ values, positionals })
 
 export const EXCLUDE = values.exclude.split(',')
 // prepend workspace to only include this project's directory
