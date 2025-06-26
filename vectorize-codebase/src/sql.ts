@@ -33,7 +33,7 @@ export function bulkInsert(embeddings: Data[]) {
 		:vector
 	)`)
 	const insert = db.transaction((values) => {
-		for (const value of values) query.all(value)
+		for (const value of values) query.run(value)
 		return values.length
 	})
 	const values = embeddings.map(({ path, content, vector }) => ({
@@ -44,4 +44,6 @@ export function bulkInsert(embeddings: Data[]) {
 	}))
 	const inserted = insert(values)
 	console.log({ inserted })
+	const data = db.query(`SELECT * FROM ${TABLE_NAME}`).get()
+	console.log({ data })
 }
