@@ -41,7 +41,7 @@ export function bulkInsert(embeddings: Data[]) {
 	const values = embeddings.map(({ path, content, vector }) => ({
 		$sha: SHA,
 		$path: path,
-		$vector: vector,
+		$vector: JSON.stringify(vector),
 		$content: content
 	}))
 	console.log({ values })
