@@ -17,7 +17,7 @@ runs:
     - run: bun install
       shell: bash
       working-directory: ${{ github.action_path }}
-    - run: bun src/index.ts --exclude-pattern ${{ inputs.exclude-pattern }} --include-pattern ${{ inputs.include-pattern }}
+    - run: bun src/index.ts --include-pattern ${{ inputs.include-pattern }} --exclude-pattern ${{ inputs.exclude-pattern }}
       shell: bash
       working-directory: ${{ github.action_path }}
 
