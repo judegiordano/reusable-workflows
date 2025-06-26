@@ -1,4 +1,4 @@
-name: test github action
+name: test vectorize project gha
 
 on:
   workflow_dispatch:
