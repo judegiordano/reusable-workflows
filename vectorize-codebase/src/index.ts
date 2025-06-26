@@ -5,8 +5,9 @@ import type { Data } from './types'
 import { bulkInsert, db, migrate } from './sql'
 import { EXCLUDE, INCLUDE } from './args'
 import { parseContent } from './file'
+import { log } from './logger'
 
-console.log({ SHA, WORKSPACE, INCLUDE, EXCLUDE, DB_PATH })
+log.debug({ SHA, WORKSPACE, INCLUDE, EXCLUDE, DB_PATH })
 //
 migrate()
 //
@@ -18,7 +19,7 @@ const entries = await glob(INCLUDE, {
 })
 const total = entries.length
 
-console.log(`${total} matched files`)
+log.debug(`${total} matched files`)
 const embedder = await pipeline('feature-extraction', MODEL)
 
 const embeddings: Data[] = []
@@ -27,9 +28,9 @@ for (const entry of entries) {
 	iter++
 	try {
 		const { content, file, path } = parseContent(entry)
-		console.log(`[${iter}/${total}] processing: ${file}`)
+		log.info(`[${iter}/${total}] processing: ${file}`)
 		if (!content.length) {
-			console.warn(`skipping empty content: ${file}`)
+			log.warn(`skipping empty content: ${file}`)
 			continue
 		}
 		const embed = await embedder(content, { pooling: 'mean' })
@@ -41,7 +42,7 @@ for (const entry of entries) {
 			embeddings.length = 0
 		}
 	} catch (error) {
-		console.warn(`error processing: ${entry}: ${error}`)
+		log.warn(`error processing: ${entry}: ${error}`)
 	}
 }
 

@@ -1,6 +1,7 @@
 import { Database } from 'bun:sqlite'
 import { DB_PATH, SHA, TABLE_NAME } from './config'
 import type { Data } from './types'
+import { log } from './logger'
 
 export const db = new Database(DB_PATH, { create: true, readwrite: true, strict: true })
 
@@ -46,5 +47,5 @@ export function bulkInsert(embeddings: Data[]) {
 		vector: JSON.stringify(vector),
 	}))
 	const inserted = insert(values)
-	console.log({ inserted })
+	log.debug({ inserted })
 }
