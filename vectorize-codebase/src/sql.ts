@@ -1,12 +1,12 @@
-import { Database } from 'bun:sqlite'
+import { constants, Database } from 'bun:sqlite'
 import { DB_PATH, SHA, TABLE_NAME } from './config'
 import type { Data } from './types'
 
-export const db = new Database(DB_PATH, { create: true, readwrite: true })
-console.log('db path', db.filename)
+export const db = new Database(DB_PATH, { create: true, readwrite: true, strict: true })
 
 export function migrate() {
 	db.exec('PRAGMA journal_mode = WAL;')
+	db.fileControl(constants.SQLITE_FCNTL_PERSIST_WAL, 0)
 	const sql = `
 		CREATE TABLE IF NOT EXISTS "${TABLE_NAME}"(
 		"id" INTEGER PRIMARY KEY AUTOINCREMENT,

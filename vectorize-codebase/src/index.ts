@@ -44,4 +44,4 @@ for (const entry of entries) {
 	}
 }
 
-db.close()
+db.close(false)
