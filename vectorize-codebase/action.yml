@@ -2,11 +2,11 @@ name: "Vectorize Repository"
 description: "Vectorize Github repository"
 
 inputs:
-  exclude-pattern:
+  exclude:
     description: "a comma-separated list of globs to ignore"
     required: false
     default: ".git"
-  include-pattern:
+  include:
     description: "a comma-separated list of globs to include"
     required: false
     default: "**/*"
@@ -19,8 +19,8 @@ runs:
       working-directory: ${{ github.action_path }}
     - run: >
         bun src/index.ts
-        --include-pattern "${{ inputs.include-pattern }}"
-        --exclude-pattern "${{ inputs.exclude-pattern }}"
+        --include "${{ inputs.include }}"
+        --exclude "${{ inputs.exclude }}"
       shell: bash
       working-directory: ${{ github.action_path }}
 

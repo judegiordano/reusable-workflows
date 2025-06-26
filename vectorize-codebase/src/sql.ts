@@ -7,7 +7,7 @@ export const db = new Database(DB_PATH, { create: true, readwrite: true, strict:
 
 export function migrate() {
 	const sql = `
-		CREATE TABLE IF NOT EXISTS "${TABLE_NAME}"(
+		CREATE TABLE IF NOT EXISTS "${TABLE_NAME}" (
 		"id" INTEGER PRIMARY KEY AUTOINCREMENT,
 		"sha" TEXT NOT NULL,
 		"file" TEXT NOT NULL,

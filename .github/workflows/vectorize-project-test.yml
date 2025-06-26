@@ -17,12 +17,12 @@ jobs:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v1
 
-      - name: use action
+      - name: use action to vectorize all markdown and yml
         id: vectorize
         uses: ./vectorize-codebase
         with:
-          include-pattern: "**/*.md,**/*.yml"
-          exclude-pattern: "**/*node_modules/**/*"
+          include: "**/*.md,**/*.yml"
+          exclude: "**/*node_modules/**/*"
 
       - name: upload data artifact
         uses: actions/upload-artifact@v4
