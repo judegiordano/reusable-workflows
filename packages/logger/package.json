@@ -1,0 +1,7 @@
+{
+  "name": "@reusable-workflows/logger",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {},
+  "dependencies": {}
+}

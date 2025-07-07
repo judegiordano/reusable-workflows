@@ -1,4 +1,4 @@
 import { run } from './action'
-import { log } from './logger'
+import { logger } from '@reusable-workflows/logger'
 
-await run().catch(log.error)
+await run().catch(logger.error)

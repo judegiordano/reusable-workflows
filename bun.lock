@@ -16,9 +16,13 @@
         "typescript": "^5",
       },
     },
+    "packages/logger": {
+      "name": "@reusable-workflows/logger",
+    },
     "vectorize-codebase": {
       "name": "vectorize-project",
       "dependencies": {
+        "@reusable-workflows/logger": "workspace:*",
         "@xenova/transformers": "^2.17.2",
         "fast-glob": "^3.3.3",
         "fastembed": "^1.14.4",
@@ -99,6 +103,8 @@
     "@protobufjs/pool": ["@protobufjs/pool@1.1.0", "", {}, "sha512-0kELaGSIDBKvcgS4zkjz1PeddatrjYcmMWOlAuAPwAeccUrPHdUqo/J6LiymHHEiJT5NrF1UVwxY14f+fy4WQw=="],
 
     "@protobufjs/utf8": ["@protobufjs/utf8@1.1.0", "", {}, "sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw=="],
+
+    "@reusable-workflows/logger": ["@reusable-workflows/logger@workspace:packages/logger"],
 
     "@types/bun": ["@types/bun@1.2.17", "", { "dependencies": { "bun-types": "1.2.17" } }, "sha512-l/BYs/JYt+cXA/0+wUhulYJB6a6p//GTPiJ7nV+QHa8iiId4HZmnu/3J/SowP5g0rTiERY2kfGKXEK5Ehltx4Q=="],
 

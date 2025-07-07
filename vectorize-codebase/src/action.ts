@@ -1,14 +1,13 @@
 import { pipeline } from '@xenova/transformers'
 import glob from 'fast-glob'
-import { BULK_WRITE_CHUNK, DB_PATH, MODEL, SHA, WORKSPACE } from './config'
+import { logger } from '@reusable-workflows/logger'
 import type { Data } from './types'
 import { bulkInsert, db, migrate } from './sql'
-import { EXCLUDE, INCLUDE } from './args'
+import { EXCLUDE, INCLUDE, BULK_WRITE_CHUNK, DB_PATH, MODEL, SHA, WORKSPACE } from './args'
 import { parseContent } from './file'
-import { log } from './logger'
 
 export async function run() {
-	log.debug({ SHA, WORKSPACE, INCLUDE, EXCLUDE, DB_PATH })
+	logger.debug({ SHA, WORKSPACE, INCLUDE, EXCLUDE, DB_PATH })
 	// prepare db
 	migrate()
 
@@ -20,7 +19,7 @@ export async function run() {
 		ignore: EXCLUDE
 	})
 	const total = entries.length
-	log.debug(`${total} matched files`)
+	logger.debug(`${total} matched files`)
 
 	const embedder = await pipeline('feature-extraction', MODEL)
 	const embeddings: Data[] = []
@@ -31,9 +30,9 @@ export async function run() {
 		iter++
 		try {
 			const { content, file, path } = parseContent(entry)
-			log.info(`[${iter}/${total}] processing: ${file}`)
+			logger.info(`[${iter}/${total}] processing: ${file}`)
 			if (!content.length) {
-				log.warn(`skipping empty content: ${file}`)
+				logger.warn(`skipping empty content: ${file}`)
 				continue
 			}
 			const { data } = await embedder(content, { pooling: 'mean' })
@@ -48,7 +47,7 @@ export async function run() {
 				embeddings.length = 0
 			}
 		} catch (error) {
-			log.warn(`error processing: ${entry}: ${error}`)
+			logger.warn(`error processing: ${entry}: ${error}`)
 		}
 	}
 
