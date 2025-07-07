@@ -1,7 +1,7 @@
 import { Database, type Statement } from 'bun:sqlite'
-import { DB_PATH, SHA, TABLE_NAME } from './config'
+import { logger } from '@reusable-workflows/logger'
+import { DB_PATH, SHA, TABLE_NAME } from './args'
 import type { Data } from './types'
-import { log } from './logger'
 
 export const db = new Database(DB_PATH, { create: true, readwrite: true, strict: true })
 
@@ -49,5 +49,5 @@ export function bulkInsert(embeddings: Data[]) {
 		vector: JSON.stringify(vector),
 	}))
 	const inserted = insert(values)
-	log.debug({ inserted })
+	logger.debug({ inserted })
 }
