@@ -3,11 +3,11 @@ import glob from 'fast-glob'
 import { logger } from '@reusable-workflows/logger'
 import type { Data } from './types'
 import { bulkInsert, db, migrate } from './sql'
-import { EXCLUDE, INCLUDE, BULK_WRITE_CHUNK, DB_PATH, MODEL, SHA, WORKSPACE } from './args'
+import { EXCLUDE, INCLUDE, BULK_WRITE_CHUNK, DB_PATH, MODEL, SHA, WORKSPACE, REPO_NAME } from './args'
 import { parseContent } from './file'
 
 export async function run() {
-	logger.debug({ SHA, WORKSPACE, INCLUDE, EXCLUDE, DB_PATH })
+	logger.debug({ SHA, REPO_NAME, WORKSPACE, INCLUDE, EXCLUDE, DB_PATH })
 	// prepare db
 	migrate()
 
