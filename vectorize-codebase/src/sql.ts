@@ -1,6 +1,6 @@
 import { Database, type Statement } from 'bun:sqlite'
 import { logger } from '@reusable-workflows/logger'
-import { DB_PATH, SHA, TABLE_NAME } from './args'
+import { DB_PATH, REPO_NAME, SHA, TABLE_NAME } from './args'
 import type { Data } from './types'
 
 export const db = new Database(DB_PATH, { create: true, readwrite: true, strict: true })
@@ -12,6 +12,7 @@ export function migrate() {
 		CREATE TABLE IF NOT EXISTS "${TABLE_NAME}" (
 		"id" INTEGER PRIMARY KEY AUTOINCREMENT,
 		"sha" TEXT NOT NULL,
+		"repository" TEXT NOT NULL,
 		"file" TEXT NOT NULL,
 		"path" TEXT NOT NULL,
 		"content" TEXT NOT NULL,
@@ -23,12 +24,14 @@ export function migrate() {
 	db.run(sql)
 	insertMany = db.prepare(`INSERT INTO ${TABLE_NAME} (
 		sha,
+		repository,
 		file,
 		path,
 		content,
 		vector
 	) VALUES (
 		:sha,
+		:repository,
 		:file,
 		:path,
 		:content,
@@ -43,6 +46,7 @@ export function bulkInsert(embeddings: Data[]) {
 	})
 	const values = embeddings.map(({ file, path, content, vector }) => ({
 		sha: SHA,
+		repository: REPO_NAME,
 		file,
 		path,
 		content,
