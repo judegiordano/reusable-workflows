@@ -53,5 +53,5 @@ export function bulkInsert(embeddings: Data[]) {
 		vector: JSON.stringify(vector),
 	}))
 	const inserted = insert(values)
-	logger.debug({ inserted })
+	logger.info({ inserted })
 }
