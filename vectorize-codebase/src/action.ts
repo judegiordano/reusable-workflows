@@ -42,15 +42,18 @@ export async function run() {
 				content,
 				vector: Array.from(data)
 			})
-			logger.info({ embeddings_len: embeddings.length, iter: iter })
-			if (embeddings.length === BULK_WRITE_CHUNK || iter >= total) {
-				logger.info('HIT')
+			if (embeddings.length === BULK_WRITE_CHUNK) {
 				bulkInsert(embeddings)
 				embeddings.length = 0
 			}
 		} catch (error) {
 			logger.warn(`error processing: ${entry}: ${error}`)
 		}
+	}
+
+	// Insert any remaining embeddings that didn't fill a chunk
+	if (embeddings.length > 0) {
+		bulkInsert(embeddings)
 	}
 
 	db.close(false)

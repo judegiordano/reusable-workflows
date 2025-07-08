@@ -40,7 +40,6 @@ export function migrate() {
 }
 
 export function bulkInsert(embeddings: Data[]) {
-	logger.info('SQL HIT')
 	const insert = db.transaction((values) => {
 		for (const value of values) insertMany.run(value)
 		return values.length
@@ -54,5 +53,5 @@ export function bulkInsert(embeddings: Data[]) {
 		vector: JSON.stringify(vector),
 	}))
 	const inserted = insert(values)
-	logger.info({ inserted })
+	logger.debug({ inserted })
 }
