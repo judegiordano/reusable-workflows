@@ -10,7 +10,7 @@ let insertMany: Statement
 export function migrate() {
 	const sql = `
 		CREATE TABLE IF NOT EXISTS "${TABLE_NAME}" (
-		"id" INTEGER PRIMARY KEY AUTOINCREMENT,
+		"id" TEXT PRIMARY KEY,
 		"sha" TEXT NOT NULL,
 		"repository" TEXT NOT NULL,
 		"file" TEXT NOT NULL,
@@ -23,6 +23,7 @@ export function migrate() {
 	`
 	db.run(sql)
 	insertMany = db.prepare(`INSERT INTO ${TABLE_NAME} (
+		id,
 		sha,
 		repository,
 		file,
@@ -30,6 +31,7 @@ export function migrate() {
 		content,
 		vector
 	) VALUES (
+		:id,
 		:sha,
 		:repository,
 		:file,
@@ -45,6 +47,7 @@ export function bulkInsert(embeddings: Data[]) {
 		return values.length
 	})
 	const values = embeddings.map(({ file, path, content, vector }) => ({
+		id: crypto.randomUUID(),
 		sha: SHA,
 		repository: REPO_NAME,
 		file,
