@@ -42,7 +42,9 @@ export async function run() {
 				content,
 				vector: Array.from(data)
 			})
+			logger.info({ embeddings_len: embeddings.length, iter: iter })
 			if (embeddings.length === BULK_WRITE_CHUNK || iter >= total) {
+				logger.info('HIT')
 				bulkInsert(embeddings)
 				embeddings.length = 0
 			}
