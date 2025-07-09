@@ -3,4 +3,5 @@ export interface Data {
 	file: string
 	content: string
 	vector: number[]
+	tokens: number[]
 }

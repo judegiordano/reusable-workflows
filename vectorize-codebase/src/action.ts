@@ -1,3 +1,4 @@
+import { encoding_for_model } from 'tiktoken'
 import { pipeline } from '@xenova/transformers'
 import glob from 'fast-glob'
 import { logger } from '@reusable-workflows/logger'
@@ -21,6 +22,7 @@ export async function run() {
 	const total = entries.length
 	logger.debug(`${total} matched files`)
 
+	const encoder = encoding_for_model('gpt-4')
 	const embedder = await pipeline('feature-extraction', MODEL)
 	const embeddings: Data[] = []
 	let iter = 0
@@ -36,11 +38,13 @@ export async function run() {
 				continue
 			}
 			const { data } = await embedder(content, { pooling: 'mean' })
+			const tokens = encoder.encode(content)
 			embeddings.push({
 				path,
 				file,
 				content,
-				vector: Array.from(data)
+				vector: Array.from(data),
+				tokens: Array.from(tokens)
 			})
 			if (embeddings.length === BULK_WRITE_CHUNK) {
 				bulkInsert(embeddings)
@@ -57,4 +61,5 @@ export async function run() {
 	}
 
 	db.close(false)
+	encoder.free()
 }

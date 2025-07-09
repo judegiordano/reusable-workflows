@@ -17,6 +17,7 @@ export function migrate() {
 		"path" TEXT NOT NULL,
 		"content" TEXT NOT NULL,
 		"vector" JSONB NOT NULL,
+		"tokens" JSONB NOT NULL,
 		"updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		"created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 	);
@@ -29,7 +30,8 @@ export function migrate() {
 		file,
 		path,
 		content,
-		vector
+		vector,
+		tokens
 	) VALUES (
 		:id,
 		:sha,
@@ -37,7 +39,8 @@ export function migrate() {
 		:file,
 		:path,
 		:content,
-		:vector
+		:vector,
+		:tokens
 	)`)
 }
 
@@ -46,7 +49,7 @@ export function bulkInsert(embeddings: Data[]) {
 		for (const value of values) insertMany.run(value)
 		return values.length
 	})
-	const values = embeddings.map(({ file, path, content, vector }) => ({
+	const values = embeddings.map(({ file, path, content, vector, tokens }) => ({
 		id: crypto.randomUUID(),
 		sha: SHA,
 		repository: REPO_NAME,
@@ -54,6 +57,7 @@ export function bulkInsert(embeddings: Data[]) {
 		path,
 		content,
 		vector: JSON.stringify(vector),
+		tokens: JSON.stringify(tokens),
 	}))
 	const inserted = insert(values)
 	logger.debug({ inserted })
